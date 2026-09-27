@@ -30,8 +30,16 @@ export async function POST() {
     });
   } catch (error: any) {
     console.error("Razorpay order creation error:", error);
+
+    // Return Razorpay's exact description if available
+    const detailedMessage =
+      error?.error?.description ||
+      error?.message ||
+      JSON.stringify(error) ||
+      "Failed to create order";
+
     return NextResponse.json(
-      { success: false, error: error?.message || "Failed to create order" },
+      { success: false, error: detailedMessage },
       { status: 500 }
     );
   }
